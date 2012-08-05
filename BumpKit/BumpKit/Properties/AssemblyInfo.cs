@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("BumpKit")]
-[assembly: AssemblyDescription("A free, open-source, library extending System.Drawing.")]
+[assembly: AssemblyDescription("https://github.com/DataDink/Bumpkit")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mark Nelson")]
 [assembly: AssemblyProduct("BumpKit")]
