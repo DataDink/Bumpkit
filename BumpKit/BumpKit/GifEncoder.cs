@@ -67,7 +67,7 @@ namespace BumpKit
         /// <param name="img">The image to add</param>
         /// <param name="x">The positioning x offset this image should be displayed at.</param>
         /// <param name="y">The positioning y offset this image should be displayed at.</param>
-        public void AddFrame(Image img, int x = 0, int y = 0)
+        public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? frameDelay = null)
         {
             using (var gifStream = new MemoryStream())
             {
@@ -76,7 +76,7 @@ namespace BumpKit
                 {
                     InitHeader(gifStream, img.Width, img.Height);
                 }
-                WriteGraphicControlBlock(gifStream);
+                WriteGraphicControlBlock(gifStream, frameDelay.GetValueOrDefault(FrameDelay));
                 WriteImageBlock(gifStream, !_isFirstImage, x, y, img.Width, img.Height);
             }
             _isFirstImage = false;
@@ -113,7 +113,7 @@ namespace BumpKit
             _stream.Write(colorTable, 0, colorTable.Length);
         }
 
-        private void WriteGraphicControlBlock(Stream sourceGif)
+        private void WriteGraphicControlBlock(Stream sourceGif, TimeSpan frameDelay)
         {
             sourceGif.Position = SourceGraphicControlExtensionPosition; // Locating the source GCE
             var blockhead = new byte[SourceGraphicControlExtensionLength];
@@ -122,7 +122,7 @@ namespace BumpKit
             WriteShort(GraphicControlExtensionBlockIdentifier); // Identifier
             WriteByte(GraphicControlExtensionBlockSize); // Block Size
             WriteByte(blockhead[3] & 0xf7 | 0x08); // Setting disposal flag
-            WriteShort(Convert.ToInt32(FrameDelay.TotalMilliseconds / 10)); // Setting frame delay
+            WriteShort(Convert.ToInt32(frameDelay.TotalMilliseconds / 10)); // Setting frame delay
             WriteByte(blockhead[6]); // Transparent color index
             WriteByte(0); // Terminator
         }
