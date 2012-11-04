@@ -76,8 +76,7 @@ namespace Demonstrations
                 for (var angle = 0; angle < 360; angle += 10)
                     using (var frame = gifImage.Rotate(angle, false))
                     {
-                        encoder.FrameDelay = TimeSpan.FromSeconds(0);
-                        encoder.AddFrame(frame);
+                        encoder.AddFrame(frame, 0, 0, TimeSpan.FromSeconds(0));
                     }
             gifStream.Position = 0;
             _gifGeneration.Image = Image.FromStream(gifStream);
