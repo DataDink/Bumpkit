@@ -67,7 +67,7 @@ namespace BumpKit
         /// <param name="img">The image to add</param>
         /// <param name="x">The positioning x offset this image should be displayed at.</param>
         /// <param name="y">The positioning y offset this image should be displayed at.</param>
-        public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? delay = null)
+        public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? frameDelay = null)
         {
             using (var gifStream = new MemoryStream())
             {
@@ -76,7 +76,7 @@ namespace BumpKit
                 {
                     InitHeader(gifStream, img.Width, img.Height);
                 }
-                WriteGraphicControlBlock(gifStream, delay ?? FrameDelay);
+                WriteGraphicControlBlock(gifStream, frameDelay.GetValueOrDefault(FrameDelay));
                 WriteImageBlock(gifStream, !_isFirstImage, x, y, img.Width, img.Height);
             }
             _isFirstImage = false;
