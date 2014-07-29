@@ -53,6 +53,7 @@ namespace BumpKit
         /// <param name="stream">The stream that will be written to.</param>
         /// <param name="width">Sets the width for this gif or null to use the first frame's width.</param>
         /// <param name="height">Sets the height for this gif or null to use the first frame's height.</param>
+        /// <param name="repeatCount">Sets the repeat count for this animation (-1 = infinite).</param>
         public GifEncoder(Stream stream, int? width = null, int? height = null, int? repeatCount = null)
         {
             _stream = stream;
