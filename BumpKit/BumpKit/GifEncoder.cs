@@ -187,10 +187,9 @@ namespace BumpKit
 
         public void Dispose()
         {
-            // Complete Application Block
-            WriteByte(0);
             // Complete File
             WriteByte(FileTrailer);
+
             // Pushing data
             _stream.Flush();
         }
