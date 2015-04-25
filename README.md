@@ -1,8 +1,6 @@
 Bumpkit (1.0.1 Documentation)
 =============================
 
-by Mark Nelson
-
 This is a .NET library that extends the System.Drawing GDI libraries.
 Useful for on-the-fly image generation in .NET-based web applications.
 
