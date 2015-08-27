@@ -1,3 +1,6 @@
+**ALERT**: I am looking for developers that would like to actively take care of this project (updates, fixes, etc).
+If you are interested please contact me at markerdink@gmail.com
+
 Bumpkit (1.0.1 Documentation)
 =============================
 
