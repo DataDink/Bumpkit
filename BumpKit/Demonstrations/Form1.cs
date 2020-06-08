@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using BumpKit;
+using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using BumpKit;
 
 namespace Demonstrations
 {
@@ -19,9 +14,14 @@ namespace Demonstrations
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnOpen_Click(object sender, EventArgs e)
         {
-            var dlg = new OpenFileDialog { Title = "Please select an image to open:", Filter = "Jpeg|*.jpg|Jpeg|*.jpeg|Png|*.png|Bitmap|*.bmp" };
+            var dlg = new OpenFileDialog 
+            { 
+                Title = "Please select an image to open:", 
+                Filter = "All Supported Images|*gif; *jpg; *png; *.bmp|Gif|*.gif|Jpeg|*.jpg|Jpeg|*.jpeg|Png|*.png|Bitmap|*.bmp" 
+            };
+
             if (dlg.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -38,7 +38,7 @@ namespace Demonstrations
 
             // Rotate and fit
             _rotateFit.BackgroundImage = img.ScaleToFit(_rotateFit.Size, false).Rotate(45, ScalingMode.FitContent).ScaleToFit(_rotateOverflow.Size);
-            
+
             // Rotate and overflow
             _rotateOverflow.BackgroundImage = img.ScaleToFit(_rotateOverflow.Size, false).Rotate(45);
 
@@ -86,7 +86,7 @@ namespace Demonstrations
             using (var gfx = Graphics.FromImage(_textGen.BackgroundImage))
             {
                 gfx.DrawString("A B C 1 2 3", new Font(FontFamily.Families.First(f => f.Name.Contains("Times")), 15), Brushes.Green, 15, 25, 10,
-                    new[] {Color.Yellow, Color.Blue, Color.Red, Color.Green, Color.Purple, Color.Black},
+                    new[] { Color.Yellow, Color.Blue, Color.Red, Color.Green, Color.Purple, Color.Black },
                     new[] { 0, (float).20, (float).40, (float).60, (float).80, 1 });
             }
         }
