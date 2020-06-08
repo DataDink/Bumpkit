@@ -71,6 +71,19 @@ namespace BumpKit
         {
             using (var gifStream = new MemoryStream())
             {
+                // if img is a gif, we need to convert it first.
+                if (ImageFormat.Gif.Equals(img.RawFormat))
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        // save to memory
+                        img.Save(ms, ImageFormat.Png);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        // pull it back out
+                        img = Image.FromStream(ms);
+                    }
+                }
+
                 img.Save(gifStream, ImageFormat.Gif);
                 if (_isFirstImage) // Steal the global color table info
                 {
