@@ -69,37 +69,30 @@ namespace BumpKit
         /// <param name="y">The positioning y offset this image should be displayed at.</param>
         public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? frameDelay = null)
         {
-            // assign to a variable used to make the frame.
-            Image imageToSave = img;
+            Image imageToSave = null;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // save to memory
+                img.Save(ms, ImageFormat.Png);
+                ms.Seek(0, SeekOrigin.Begin);
+                // pull it back out
+                imageToSave = Image.FromStream(ms);
+            }
 
             using (var gifStream = new MemoryStream())
             {
-                // if img is a gif, we need to convert it first.
-                if (ImageFormat.Gif.Equals(img.RawFormat))
-                {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        // save to memory
-                        imageToSave.Save(ms, ImageFormat.Png);
-                        ms.Seek(0, SeekOrigin.Begin);
-                        // pull it back out
-                        imageToSave = Image.FromStream(ms);
-                    }
-                }
-
-                // save the image to the frame.
                 imageToSave.Save(gifStream, ImageFormat.Gif);
                 if (_isFirstImage) // Steal the global color table info
                 {
-                    InitHeader(gifStream, img.Width, img.Height);
+                    InitHeader(gifStream, imageToSave.Width, imageToSave.Height);
                 }
                 WriteGraphicControlBlock(gifStream, frameDelay.GetValueOrDefault(FrameDelay));
-                WriteImageBlock(gifStream, !_isFirstImage, x, y, img.Width, img.Height);
-
-                // dispose of the image saved to frame.
-                if (imageToSave != null) imageToSave.Dispose();
+                WriteImageBlock(gifStream, !_isFirstImage, x, y, imageToSave.Width, imageToSave.Height);
             }
             _isFirstImage = false;
+
+            if (imageToSave != null) imageToSave.Dispose();
         }
 
         private void InitHeader(Stream sourceGif, int w, int h)
