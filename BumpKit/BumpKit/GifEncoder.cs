@@ -69,6 +69,9 @@ namespace BumpKit
         /// <param name="y">The positioning y offset this image should be displayed at.</param>
         public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? frameDelay = null)
         {
+            // assign to a variable used to make the frame.
+            Image imageToSave = img;
+
             using (var gifStream = new MemoryStream())
             {
                 // if img is a gif, we need to convert it first.
@@ -77,20 +80,24 @@ namespace BumpKit
                     using (MemoryStream ms = new MemoryStream())
                     {
                         // save to memory
-                        img.Save(ms, ImageFormat.Png);
+                        imageToSave.Save(ms, ImageFormat.Png);
                         ms.Seek(0, SeekOrigin.Begin);
                         // pull it back out
-                        img = Image.FromStream(ms);
+                        imageToSave = Image.FromStream(ms);
                     }
                 }
 
-                img.Save(gifStream, ImageFormat.Gif);
+                // save the image to the frame.
+                imageToSave.Save(gifStream, ImageFormat.Gif);
                 if (_isFirstImage) // Steal the global color table info
                 {
                     InitHeader(gifStream, img.Width, img.Height);
                 }
                 WriteGraphicControlBlock(gifStream, frameDelay.GetValueOrDefault(FrameDelay));
                 WriteImageBlock(gifStream, !_isFirstImage, x, y, img.Width, img.Height);
+
+                // dispose of the image saved to frame.
+                if (imageToSave != null) imageToSave.Dispose();
             }
             _isFirstImage = false;
         }
