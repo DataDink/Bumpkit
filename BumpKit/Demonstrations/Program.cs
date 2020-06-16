@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using BumpKit;
+using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.Linq;
-using System.Windows.Forms;
-using BumpKit;
+using System.IO;
 
 namespace Demonstrations
 {
@@ -18,9 +13,31 @@ namespace Demonstrations
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Demonstrations());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new Demonstrations());
+
+
+            using (FileStream fs = new FileStream(@"E:\123.gif", FileMode.OpenOrCreate))
+            {
+                GifEncoder gifEncoder = new GifEncoder(fs);
+
+                foreach (string item in Directory.EnumerateFiles(@"E:\Pictures"))
+                {
+                    try
+                    {
+                        Image img = Image.FromFile(item);
+                        gifEncoder.AddFrame(Image.FromFile(item));
+                    }
+                    catch
+                    {
+
+                    }
+
+                }
+            }
+
+
         }
     }
 }

@@ -69,17 +69,30 @@ namespace BumpKit
         /// <param name="y">The positioning y offset this image should be displayed at.</param>
         public void AddFrame(Image img, int x = 0, int y = 0, TimeSpan? frameDelay = null)
         {
+            Image imageToSave = null;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // save to memory
+                img.Save(ms, ImageFormat.Png);
+                ms.Seek(0, SeekOrigin.Begin);
+                // pull it back out
+                imageToSave = Image.FromStream(ms);
+            }
+
             using (var gifStream = new MemoryStream())
             {
-                img.Save(gifStream, ImageFormat.Gif);
+                imageToSave.Save(gifStream, ImageFormat.Gif);
                 if (_isFirstImage) // Steal the global color table info
                 {
-                    InitHeader(gifStream, img.Width, img.Height);
+                    InitHeader(gifStream, imageToSave.Width, imageToSave.Height);
                 }
                 WriteGraphicControlBlock(gifStream, frameDelay.GetValueOrDefault(FrameDelay));
-                WriteImageBlock(gifStream, !_isFirstImage, x, y, img.Width, img.Height);
+                WriteImageBlock(gifStream, !_isFirstImage, x, y, imageToSave.Width, imageToSave.Height);
             }
             _isFirstImage = false;
+
+            if (imageToSave != null) imageToSave.Dispose();
         }
 
         private void InitHeader(Stream sourceGif, int w, int h)
